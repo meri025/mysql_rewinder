@@ -86,7 +86,7 @@ RSpec.describe MysqlRewinder do
                 name VARCHAR(128) NOT NULL,
                 PRIMARY KEY (id)
             );
-    
+
             DROP DATABASE IF EXISTS database_rewinder_test_2;
             CREATE DATABASE database_rewinder_test_2;
             CREATE TABLE database_rewinder_test_2.foo_2 (
@@ -151,6 +151,43 @@ RSpec.describe MysqlRewinder do
           expect { MysqlRewinder.clean }.not_to change {
             root_client.query('SELECT * FROM database_rewinder_test_2.foo_2').to_a.size
           }.from(1)
+        end
+      end
+
+      context 'when a table has foreign key constraints' do
+        before do
+          <<~SQL.split(';').map(&:strip).reject(&:empty?).each { |sql| root_client.query(sql) }
+            DROP DATABASE IF EXISTS database_rewinder_test;
+            CREATE DATABASE database_rewinder_test;
+            CREATE TABLE database_rewinder_test.foo (
+              id INT NOT NULL AUTO_INCREMENT,
+              name VARCHAR(128) NOT NULL,
+              PRIMARY KEY (id)
+            );
+            CREATE TABLE database_rewinder_test.bar (
+              id INT NOT NULL AUTO_INCREMENT,
+              foo_id INT NOT NULL,
+              name VARCHAR(128) NOT NULL,
+              PRIMARY KEY (id),
+              FOREIGN KEY (foo_id)
+                  REFERENCES foo(id)
+            );
+          SQL
+
+          MysqlRewinder.setup([root_db_config.merge(database: 'database_rewinder_test')], adapter: adapter, except_tables: [])
+
+          root_client.query(<<~SQL)
+            INSERT INTO database_rewinder_test.foo (name) VALUES ("seika");
+          SQL
+          root_client.query(<<~SQL)
+            INSERT INTO database_rewinder_test.bar (foo_id, name) VALUES (1, "nijika");
+          SQL
+        end
+
+        it 'removes records in parent table without foreign key constraints error' do
+          expect { MysqlRewinder.clean }.to change {
+            root_client.query('SELECT * FROM database_rewinder_test.foo').to_a.size
+          }.from(1).to(0)
         end
       end
     end

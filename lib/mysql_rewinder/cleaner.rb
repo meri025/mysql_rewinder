@@ -20,6 +20,7 @@ class MysqlRewinder
       target_tables = (tables - @except_tables) & all_tables
       return if target_tables.empty?
 
+      @client.execute("SET FOREIGN_KEY_CHECKS = 0;")
       @client.execute(target_tables.map { |table| "DELETE FROM #{table}" }.join(';'))
     end
 
