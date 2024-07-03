@@ -6,27 +6,30 @@ require 'set'
 require 'tmpdir'
 require 'fileutils'
 require 'forwardable'
+require 'logger'
 
 class MysqlRewinder
   class << self
     extend Forwardable
     delegate %i[clean clean_all record_inserted_table] => :@instance
 
-    def setup(db_configs, except_tables: [], adapter: :trilogy)
-      @instance = new(db_configs: db_configs, except_tables: except_tables, adapter: adapter)
+    def setup(db_configs, except_tables: [], adapter: :trilogy, logger: Logger.new(nil))
+      @instance = new(db_configs: db_configs, except_tables: except_tables, adapter: adapter, logger: logger)
     end
   end
 
-  def initialize(db_configs:, except_tables:, adapter:)
+  def initialize(db_configs:, except_tables:, adapter:, logger:)
     @initialized_pid = Process.pid
     @inserted_table_record_dir = Pathname(Dir.tmpdir)
     @cleaners = db_configs.map do |db_config|
       Cleaner.new(
         db_config.transform_keys(&:to_sym),
         except_tables: except_tables,
-        adapter: adapter
+        adapter: adapter,
+        logger: logger
       )
     end
+    @logger = logger
     reset_inserted_tables
   end
 
