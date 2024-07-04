@@ -111,6 +111,7 @@ If you want to enable logging, specify `logger` for `MysqlRewinder.setup`
 
 ```ruby
 MysqlRewinder.setup(db_configs, logger: Logger.new(STDOUT))
+```
 
 ## Contributing
 
