@@ -21,11 +21,8 @@ class MysqlRewinder
       target_tables = (tables - @except_tables) & all_tables
       return if target_tables.empty?
 
-      disable_foreign_key_checks = "SET FOREIGN_KEY_CHECKS = 0;"
-      delete_sql = target_tables.map { |table| "DELETE FROM #{table}" }.join(';')
-
-      log_and_execute(disable_foreign_key_checks)
-      log_and_execute(delete_sql)
+      log_and_execute("SET FOREIGN_KEY_CHECKS = 0;")
+      log_and_execute(target_tables.map { |table| "DELETE FROM #{table}" }.join(';'))
     end
 
     def all_tables
