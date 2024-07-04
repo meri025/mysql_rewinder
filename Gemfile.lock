@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mysql_rewinder (0.1.1)
+    mysql_rewinder (0.1.2)
 
 GEM
   remote: https://rubygems.org/
@@ -99,4 +99,4 @@ DEPENDENCIES
   trilogy
 
 BUNDLED WITH
-   2.3.15
+   2.5.10
