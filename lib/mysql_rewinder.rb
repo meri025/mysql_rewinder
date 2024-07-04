@@ -13,7 +13,7 @@ class MysqlRewinder
     extend Forwardable
     delegate %i[clean clean_all record_inserted_table] => :@instance
 
-    def setup(db_configs, except_tables: [], adapter: :trilogy, logger: Logger.new(nil))
+    def setup(db_configs, except_tables: [], adapter: :trilogy, logger: nil)
       @instance = new(db_configs: db_configs, except_tables: except_tables, adapter: adapter, logger: logger)
     end
   end
