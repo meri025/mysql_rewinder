@@ -4,12 +4,17 @@ class MysqlRewinder
     @client: Adapter
     @except_tables: Array[String]
     @all_tables: Array[String]
+    @logger: untyped
 
     attr_reader db_config: Hash[Symbol,String]
 
-    def initialize: (Hash[Symbol,String] db_config, except_tables: Array[String], adapter: Symbol) -> untyped
+    def initialize: (Hash[Symbol,String] db_config, except_tables: Array[String], adapter: Symbol, ?logger: untyped) -> untyped
     def clean_all: () -> void
     def clean: (tables: untyped) -> void
     def all_tables: () -> void
+
+    private
+
+    def log_and_execute: (String sql) -> void
   end
 end
