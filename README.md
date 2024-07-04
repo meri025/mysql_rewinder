@@ -89,7 +89,7 @@ MysqlRewinder.setup(db_configs, adapter: :mysql2)
 If you want to use MysqlRewinder with ActiveRecord, do the following:
 
 * Generate db_configs from `ActiveRecord::Base.configurations`
-* Pass `ActiveRecord::SchemaMigration.new(nil).table_name` and `ActiveRecord::Base.internal_metadata_table_name` to `DatabaseRewinder.setup` as `except_tables`
+* Pass `ActiveRecord::SchemaMigration.new(nil).table_name` and `ActiveRecord::Base.internal_metadata_table_name` to `MysqlRewinder.setup` as `except_tables`
 
 ```ruby
 db_configs = ActiveRecord::Base.configurations.configs_for(env_name: 'test').map(&:configuration_hash)
