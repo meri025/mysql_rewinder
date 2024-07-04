@@ -107,14 +107,10 @@ MysqlRewinder.setup(db_configs, except_tables: except_tables)
 
 ### Logging
 
-If you want to enable logging, do the following:
-
-* Generate db_configs from `ActiveRecord::Base.configurations`
-* Pass `logger: Logger` to `MysqlRewinder.setup`.
+If you want to enable logging, specify `logger` for `MysqlRewinder.setup`
 
 ```ruby
 MysqlRewinder.setup(db_configs, logger: Logger.new(STDOUT))
-```
 
 ## Contributing
 
