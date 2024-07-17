@@ -21,7 +21,7 @@ class MysqlRewinder
       target_tables = (tables - @except_tables) & all_tables
 
       if target_tables.empty?
-        @logger&.debug "[MysqlRewinder][#{@db_config[:database]}] the table to be deleted is empty."
+        @logger&.debug { "[MysqlRewinder][#{@db_config[:database]}] Skip DELETE query because target_table is empty." }
         return
       end
 
