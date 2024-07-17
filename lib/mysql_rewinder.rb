@@ -59,7 +59,7 @@ class MysqlRewinder
     files = Dir.glob(@inserted_table_record_dir.join("#{@initialized_pid}.*.inserted_tables").to_s)
 
     FileUtils.rm(files)
-    @logger&.debug "[MysqlRewinder] removed files: #{files.join(', ')}" if files.any?
+    @logger&.debug { "[MysqlRewinder] removed files: #{files.join(', ')}" } if files.any?
   end
 
   def calculate_inserted_tables
